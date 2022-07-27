@@ -62,7 +62,7 @@ def index():
         total += stocks[i]["SUM(quantity)"] * prices[i]
 
     return render_template(
-        "index.html", stocks=stocks, prices=prices, cash=cash, total=total
+        "index.html", stocks=stocks, usd=usd, cash=cash, total=total
     )
 
 
