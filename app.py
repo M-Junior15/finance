@@ -56,7 +56,7 @@ def index():
         prices.append(temp)
         total += stocks[i]["SUM(quantity)"]*prices[i]
 
-    return render_template("index.html", stocks=stocks, usd=usd, cash=cash, total=total)
+    return render_template("index.html", stocks=stocks, prices=prices, cash=cash, total=total)
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
