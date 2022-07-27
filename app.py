@@ -47,16 +47,24 @@ def after_request(response):
 def index():
     """Show portfolio of stocks"""
 
-    stocks = db.execute("SELECT symbol, SUM(shares) FROM transactions WHERE user_id=? GROUP BY symbol", session["user_id"])
-    total = cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
+    stocks = db.execute(
+        "SELECT symbol, SUM(shares) FROM transactions WHERE user_id=? GROUP BY symbol",
+        session["user_id"],
+    )
+    total = cash = db.execute(
+        "SELECT cash FROM users WHERE id = ?", session["user_id"]
+    )[0]["cash"]
     prices = []
 
     for i, owned in enumerate(stocks):
         temp = lookup(owned["symbol"])["price"]
         prices.append(temp)
-        total += stocks[i]["SUM(quantity)"]*prices[i]
+        total += stocks[i]["SUM(quantity)"] * prices[i]
 
-    return render_template("index.html", stocks=stocks, prices=prices, cash=cash, total=total)
+    return render_template(
+        "index.html", stocks=stocks, prices=prices, cash=cash, total=total
+    )
+
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
