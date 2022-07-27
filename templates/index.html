@@ -16,11 +16,11 @@
         <tbody>
             {% for stock in stocks %}
             <tr>
-                <td>{{ asset["symbol"] }}</td>
+                <td> {{ stock["symbol"] }} </td>
                 <td> {{ stock["name"] }} </td>
-                <td>{{ asset["SUM(quantity)"] }}</td>
-                <td>{{ prices[loop.index0] | usd }}</td>
-                <td>{{ ((prices[loop.index0])*asset["SUM(quantity)"]) | usd }}</td>
+                <td> {{ stock["totalShares"] }} </td>
+                <td> {{ usd(stock["price"]) }} </td>
+                <td> {{ usd(stock["totalShares"] * stock["price"]) }} </td>
             </tr>
             {% endfor %}
             
