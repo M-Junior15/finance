@@ -49,17 +49,15 @@ def index():
     user_id = session["user_id"]
 
     stocks = db.execute(
-        "SELECT symbol, name, price, SUM(shares) FROM transactions WHERE user_id = ? GROUP BY symbol, name, price",
+        "SELECT * FROM transactions WHERE user_id = ? GROUP BY symbol, name, price",
         user_id,
     )
     cash = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
-    total = cash
-    prices = []
 
-    for i, owned in enumerate(stocks):
-        temp = lookup(owned["symbol"])["price"]
-        prices.append(temp)
-        total += stocks[i]["SUM(shares)"]*prices[i]
+    total = cash
+
+    for stock in stocks:
+        total += stock["price"] * stock["totalShares"]
 
     return render_template("index.html", stocks=stocks, cash=cash, usd=usd, total=total)
 
