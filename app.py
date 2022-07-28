@@ -49,7 +49,7 @@ def index():
     user_id = session["user_id"]
 
     stocks = db.execute(
-        "SELECT symbol, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol",
+        "SELECT symbol, price, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol",
         user_id,
     )
     cash = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
