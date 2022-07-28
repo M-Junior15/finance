@@ -57,7 +57,7 @@ def index():
     total = cash
 
     for stock in stocks:
-        total += stock["price"] * stock["totalShares"]
+        total += stock["price"] * stock["SUM(shares)"]
 
     return render_template("index.html", stocks=stocks, cash=cash, usd=usd, total=total)
 
