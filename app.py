@@ -49,9 +49,8 @@ def index():
     user_id = session["user_id"]
 
     stocks = db.execute(
-        "SELECT symbol, name, price, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol, name, price",
+        "SELECT symbol, name, price, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol, name, price ORDER BY symbol",
         user_id,
-        
     )
     cash = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
 
@@ -60,6 +59,7 @@ def index():
     for stock in stocks:
         total += stock["price"] * stock["totalShares"]
     return render_template("index.html", stocks=stocks, cash=cash, usd=usd, total=total)
+
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
