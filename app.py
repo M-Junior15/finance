@@ -53,12 +53,13 @@ def index():
         user_id,
     )
     cash = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
+    total = cash
     prices = []
 
     for i, owned in enumerate(stocks):
         temp = lookup(owned["symbol"])["price"]
         prices.append(temp)
-        total_bal += stocks[i]["SUM(shares)"]*prices[i]
+        total += stocks[i]["SUM(shares)"]*prices[i]
 
     return render_template("index.html", stocks=stocks, cash=cash, usd=usd, total=total)
 
