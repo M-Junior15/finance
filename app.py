@@ -23,10 +23,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-uri = os.getenv("DATABASE_URL")
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://")
-db = SQL(uri)
+db = SQL("sqlite:///finance.db")
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
@@ -46,10 +43,10 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    user_id = session["user_id"]
 
+    user_id = session["user_id"]
     stocks = db.execute(
-        "SELECT symbol, name, price, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol, name, price",
+        "SELECT symbol, MAX(name) AS name, MAX(price) AS price, SUM(shares) as totalShares FROM transactions WHERE user_id = ? GROUP BY symbol ORDER BY symbol",
         user_id,
     )
     cash = db.execute("SELECT cash FROM users WHERE id = ?", user_id)[0]["cash"]
@@ -57,8 +54,7 @@ def index():
     total = cash
 
     for stock in stocks:
-        total += stock["price"] * stock["SUM(shares)"]
-
+        total += stock["price"] * stock["totalShares"]
     return render_template("index.html", stocks=stocks, cash=cash, usd=usd, total=total)
 
 
